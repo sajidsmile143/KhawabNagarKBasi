@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Category from './pages/Category';
@@ -58,44 +59,45 @@ function App() {
 
   const handlePublish = (newPoem) => {
     setPoems([newPoem, ...poems]);
-    // Redirect to home or stay on admin? Let's redirect to home
     window.location.href = '/';
   };
 
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="App">
-        <Navbar theme={theme} toggleTheme={toggleTheme} />
-        
-        <Routes>
-          <Route path="/" element={<Home poems={poems} />} />
-          <Route path="/poem/:id" element={<PoemDetail poems={poems} />} />
-          <Route path="/about" element={<AboutPoet />} />
-          <Route path="/admin" element={<AdminPreview onPublish={handlePublish} />} />
-          <Route path="/ghazals" element={<Category title="Ghazals" poems={poems.filter(p => p.category === 'Ghazal')} />} />
-          <Route path="/nazms" element={<Category title="Nazms" poems={poems.filter(p => p.category === 'Nazm')} />} />
-          <Route path="/rubai" element={<Category title="Rubaiyat" poems={poems.filter(p => p.category === 'Rubai')} />} />
-          <Route path="/sher" element={<Category title="Ashaar" poems={poems.filter(p => p.category === 'Sher')} />} />
-        </Routes>
-        
-        <footer style={{ 
-          padding: '6rem 2rem', 
-          textAlign: 'center', 
-          borderTop: '1px solid rgba(0,0,0,0.05)',
-          marginTop: '6rem',
-          backgroundColor: 'var(--bg-card)'
-        }}>
-          <h2 className="serif" style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Khawab Nagar Ki Basi</h2>
-          <p className="serif" style={{ fontStyle: 'italic', color: 'var(--text-muted)', maxWidth: '400px', margin: '0 auto 2rem' }}>
-            "Words are the only bridge between two souls."
-          </p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', opacity: 0.6 }}>
-            &copy; 2026 Khawab Nagar Ki Basi. All Rights Reserved.
-          </p>
-        </footer>
-      </div>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="App">
+          <Navbar theme={theme} toggleTheme={toggleTheme} />
+          
+          <Routes>
+            <Route path="/" element={<Home poems={poems} />} />
+            <Route path="/poem/:id" element={<PoemDetail poems={poems} />} />
+            <Route path="/about" element={<AboutPoet />} />
+            <Route path="/admin" element={<AdminPreview onPublish={handlePublish} />} />
+            <Route path="/ghazals" element={<Category title="Ghazals" poems={poems.filter(p => p.category === 'Ghazal')} />} />
+            <Route path="/nazms" element={<Category title="Nazms" poems={poems.filter(p => p.category === 'Nazm')} />} />
+            <Route path="/rubai" element={<Category title="Rubaiyat" poems={poems.filter(p => p.category === 'Rubai')} />} />
+            <Route path="/sher" element={<Category title="Ashaar" poems={poems.filter(p => p.category === 'Sher')} />} />
+          </Routes>
+          
+          <footer style={{ 
+            padding: '6rem 2rem', 
+            textAlign: 'center', 
+            borderTop: '1px solid rgba(0,0,0,0.05)',
+            marginTop: '6rem',
+            backgroundColor: 'var(--bg-card)'
+          }}>
+            <h2 className="serif" style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Khawab Nagar Ki Basi</h2>
+            <p className="serif" style={{ fontStyle: 'italic', color: 'var(--text-muted)', maxWidth: '400px', margin: '0 auto 2rem' }}>
+              "Words are the only bridge between two souls."
+            </p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', opacity: 0.6 }}>
+              &copy; 2026 Khawab Nagar Ki Basi. All Rights Reserved.
+            </p>
+          </footer>
+        </div>
+      </Router>
+    </HelmetProvider>
   );
 }
 

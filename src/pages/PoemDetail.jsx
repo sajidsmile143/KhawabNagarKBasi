@@ -1,7 +1,7 @@
-import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MessageCircle, Heart, Download } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const PoemDetail = ({ poems }) => {
   const { id } = useParams();
@@ -15,6 +15,13 @@ const PoemDetail = ({ poems }) => {
       animate={{ opacity: 1 }}
       style={{ padding: '6rem 2rem', minHeight: '100vh', backgroundColor: 'var(--secondary)' }}
     >
+      <Helmet>
+        <title>{poem.title} | Khawab Nagar Ki Basi</title>
+        <meta name="description" content={poem.excerpt} />
+        <meta property="og:title" content={poem.title} />
+        <meta property="og:description" content={poem.excerpt} />
+        <meta property="og:image" content="https://raw.githubusercontent.com/sajidsmile143/KhawabNagarKBasi/main/src/assets/hero.png" />
+      </Helmet>
       <div className="container" style={{ maxWidth: '800px' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '4rem' }}>
           <ArrowLeft size={18} /> Back to Gallery
