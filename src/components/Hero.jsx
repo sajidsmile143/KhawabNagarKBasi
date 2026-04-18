@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -10,10 +12,18 @@ const Hero = () => {
       justifyContent: 'center',
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(var(--hero-overlay), var(--hero-overlay)), url("file:///C:/Users/hp/.gemini/antigravity/brain/872b8689-9b2f-4ebe-836c-ae9341ef1c0e/poetic_hero_bg_1776514357323.png")',
+      background: 'var(--secondary)',
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }}>
+      {/* Decorative background overlay */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(45deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%)',
+        zIndex: 1
+      }}></div>
+
       <div style={{
         textAlign: 'center',
         zIndex: 2,
@@ -35,7 +45,7 @@ const Hero = () => {
             KHUSH AMDEED
           </span>
           <h1 className="urdu" style={{ 
-            fontSize: '6rem', 
+            fontSize: 'clamp(3rem, 10vw, 6rem)', 
             marginBottom: '1.5rem', 
             color: 'var(--text-main)',
             textShadow: '0 10px 30px rgba(0,0,0,0.05)'
@@ -53,7 +63,8 @@ const Hero = () => {
             fontSize: '1.4rem', 
             color: 'var(--text-muted)', 
             maxWidth: '700px',
-            lineHeight: '1.8'
+            lineHeight: '1.8',
+            margin: '0 auto'
           }}>
             "Har shair aik mehak hai jo rooh ko chhoo jaye..."
           </p>

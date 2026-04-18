@@ -1,10 +1,12 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Instagram, Twitter, Mail } from 'lucide-react';
 
 const AboutPoet = () => {
   return (
-    <section className="container" id="about" style={{ padding: '6rem 2rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+    <section className="container" id="about" style={{ padding: '6rem 2rem' }}>
       <div style={{ display: 'flex', gap: '4rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
@@ -14,23 +16,19 @@ const AboutPoet = () => {
           <div style={{ 
             width: '100%', 
             height: '500px', 
-            backgroundColor: '#eee', 
+            backgroundColor: 'var(--bg-card)', 
             borderRadius: '12px',
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
+            border: '1px solid rgba(0,0,0,0.05)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.03)'
           }}>
-            {/* Placeholder for Poet's Photo */}
-            <div style={{ 
-              position: 'absolute', 
-              inset: 0, 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              color: '#aaa',
-              fontStyle: 'italic'
-            }}>
-              [ Poet's Portrait ]
-            </div>
+            {/* Portrait Image */}
+            <img 
+              src="/images/poet.png" 
+              alt="Khawab Nagar Ki Basi" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
         </motion.div>
 
