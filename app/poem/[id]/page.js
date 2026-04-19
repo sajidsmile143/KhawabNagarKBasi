@@ -78,7 +78,7 @@ export default async function PoemPage({ params }) {
 
         <div style={{ marginTop: '6rem', textAlign: 'center' }}>
           <p className="serif" style={{ fontStyle: 'italic', color: 'var(--text-muted)', fontSize: '1.1rem' }}>
-            Published on {poem.date} by Khawab Nagar Ki Basi
+            Published on {poem.date} by Khawab Nagar Kay Basi
           </p>
         </div>
       </div>

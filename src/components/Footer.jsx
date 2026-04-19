@@ -16,12 +16,12 @@ const Footer = () => {
       marginTop: '6rem',
       backgroundColor: 'var(--bg-card)'
     }}>
-      <h2 className="serif" style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Khawab Nagar Ki Basi</h2>
+      <h2 className="serif" style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Khawab Nagar Kay Basi</h2>
       <p className="serif" style={{ fontStyle: 'italic', color: 'var(--text-muted)', maxWidth: '400px', margin: '0 auto 2rem' }}>
         "Words are the only bridge between two souls."
       </p>
       <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', opacity: 0.6 }}>
-        &copy; {new Date().getFullYear()} Khawab Nagar Ki Basi. All Rights Reserved.
+        &copy; {new Date().getFullYear()} Khawab Nagar Kay Basi. All Rights Reserved.
       </p>
     </footer>
   );

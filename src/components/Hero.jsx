@@ -20,7 +20,7 @@ const Hero = () => {
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: 'linear-gradient(45deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%)',
+        background: 'linear-gradient(45deg, rgba(230, 68, 169, 0.05) 0%, transparent 100%)',
         zIndex: 1
       }}></div>
 
@@ -34,23 +34,14 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
-          <span style={{ 
-            letterSpacing: '6px', 
-            color: 'var(--accent)', 
-            fontSize: '0.9rem', 
-            fontWeight: '600',
-            marginBottom: '1.5rem',
-            display: 'block' 
-          }}>
-            KHUSH AMDEED
-          </span>
+          <span style={{ color: 'var(--accent)', letterSpacing: '4px', fontSize: '0.9rem', fontWeight: 'bold', marginBottom: '1.5rem', display: 'block' }}>OFFICIAL WRITER & POETRY PORTFOLIO</span>
           <h1 className="urdu" style={{ 
             fontSize: 'clamp(3rem, 10vw, 6rem)', 
             marginBottom: '1.5rem', 
             color: 'var(--text-main)',
             textShadow: '0 10px 30px rgba(0,0,0,0.05)'
           }}>
-            خواب نگر کی باسی
+            خواب نگر کے باسی
           </h1>
           <div style={{
             width: '80px',

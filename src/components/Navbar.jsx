@@ -42,7 +42,7 @@ const Navbar = () => {
       <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
         <Feather color="var(--accent)" size={24} />
         <span className="serif" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-          Khawab Nagar Ki Basi
+          Khawab Nagar Kay Basi
         </span>
       </Link>
       
@@ -84,10 +84,15 @@ const Navbar = () => {
               flexDirection: 'column',
               animation: 'fadeIn 0.3s ease-out'
             }}>
-              <Link href="/category/ghazals" className="dropdown-link">Ghazals</Link>
-              <Link href="/category/nazms" className="dropdown-link">Nazms</Link>
-              <Link href="/category/rubai" className="dropdown-link">Rubaiyat</Link>
-              <Link href="/category/sher" className="dropdown-link">Ashaar</Link>
+              <Link href="/category/ghazals" className="dropdown-link">Ghazals (غزلیات)</Link>
+              <Link href="/category/nazms" className="dropdown-link">Nazms (نظمیں)</Link>
+              <Link href="/category/rubai" className="dropdown-link">Rubaiyat (رباعیات)</Link>
+              <Link href="/category/sher" className="dropdown-link">Ashaar (اشعار)</Link>
+              <Link href="/category/novels" className="dropdown-link">Novels (ناول)</Link>
+              <Link href="/category/afsany" className="dropdown-link">Afsany (افسانے)</Link>
+              <Link href="/category/tehreer" className="dropdown-link">Tehreer (تحاریر)</Link>
+              <Link href="/category/rohani" className="dropdown-link">Rohani Shairi (روحانی شاعری)</Link>
+              <Link href="/category/alfaz" className="dropdown-link">Mery Alfaz (میرے الفاظ)</Link>
             </div>
           )}
         </div>
@@ -117,7 +122,7 @@ const Navbar = () => {
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '1px solid rgba(0,0,0,0.1)' }}>
           <Link 
             href="/admin" 
-            title="Poet Login"
+            title="Writer & Poetess Login"
             style={{ 
               textDecoration: 'none', 
               color: 'var(--accent)', 

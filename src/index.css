@@ -1,25 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Gulzar&display=swap');
 
 :root {
   --primary: #1a1a1a;
-  --secondary: #fdfbf7; /* Cream/Off-white */
-  --accent: #c5a059;    /* Gold */
+  --secondary: #fffafb; /* Subtle Pinkish White */
+  --accent: #E644A9;    /* User Specified Pink */
   --text-main: #2d2d2d;
   --text-muted: #666666;
   --bg-card: #ffffff;
   --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  --font-urdu: 'Noto Nastaliq Urdu', serif;
-  --hero-overlay: rgba(253, 251, 247, 0.8);
+  --font-urdu: 'Gulzar', serif;
+  --hero-overlay: rgba(255, 250, 251, 0.8);
 }
 
 [data-theme='dark'] {
-  --primary: #fdfbf7;
-  --secondary: #0f1115; /* Midnight Black */
-  --accent: #d4af37;
+  --primary: #fffafb;
+  --secondary: #120a0e; /* Deep Dark Berry */
+  --accent: #ff69c4;    /* Slightly lighter for dark mode */
   --text-main: #e0e0e0;
   --text-muted: #a0a0a0;
-  --bg-card: #1a1d23;
-  --hero-overlay: rgba(15, 17, 21, 0.85);
+  --bg-card: #1c1217;   /* Dark Magenta-Black */
+  --hero-overlay: rgba(18, 10, 14, 0.85);
 }
 
 * {

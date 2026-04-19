@@ -46,7 +46,7 @@ export default async function Home() {
         </div>
         <PoetryGrid poems={displayPoems.slice(0, 6)} />
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <Link href="/category/ghazals">
+          <Link href="/collections">
             <button className="btn-premium">View All Collections</button>
           </Link>
         </div>

@@ -26,7 +26,7 @@ const AboutPoet = () => {
             {/* Portrait Image */}
             <img 
               src="/images/poet.png" 
-              alt="Khawab Nagar Ki Basi" 
+              alt="Khawab Nagar Kay Basi" 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
@@ -37,13 +37,13 @@ const AboutPoet = () => {
           whileInView={{ opacity: 1, x: 0 }}
           style={{ flex: '1.5', minWidth: '300px' }}
         >
-          <span style={{ color: 'var(--accent)', letterSpacing: '2px', fontSize: '0.8rem' }}>MEET THE POET</span>
-          <h2 className="serif" style={{ fontSize: '3rem', margin: '1rem 0' }}>Khawab Nagar Ki Basi</h2>
+          <span style={{ color: 'var(--accent)', letterSpacing: '2px', fontSize: '0.8rem' }}>MEET THE WRITER & POETESS</span>
+          <h2 className="serif" style={{ fontSize: '3rem', margin: '1rem 0' }}>Samreena Adeel</h2>
           <p className="serif" style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
             "Har shair aik kahani hai, aur har kahani aik adhura khawab."
           </p>
           <p style={{ color: 'var(--text-main)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-            An Urdu poet dedicated to capturing the whispers of the heart and the silence of the night. Through my verses, I explore the depths of love, the ache of longing, and the beauty found in life's transient moments.
+            An Urdu writer and poetess dedicated to capturing the whispers of the heart and the silence of the night. Through my verses and stories, I explore the depths of love, the ache of longing, and the beauty found in life's transient moments.
           </p>
           
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>

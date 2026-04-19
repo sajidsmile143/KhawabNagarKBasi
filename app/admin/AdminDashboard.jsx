@@ -54,7 +54,7 @@ export default function AdminDashboard({ initialPoems }) {
     if (password === 'khawab123') {
       setIsAuthorized(true);
       sessionStorage.setItem('admin_auth', 'true');
-      showNotification("Sangat welcome back!", "success");
+      showNotification("Khush amdeed, Welcome back!", "success");
     } else {
       showNotification("Ghalat password!", "error");
     }
@@ -110,7 +110,7 @@ export default function AdminDashboard({ initialPoems }) {
         const filePath = fileName;
 
         const { data, error: uploadError } = await supabase.storage
-          .from('POETRY-IMAGES')
+          .from('poetry-images')
           .upload(filePath, imageFile, {
             cacheControl: '3600',
             upsert: false,
@@ -119,13 +119,17 @@ export default function AdminDashboard({ initialPoems }) {
 
         if (uploadError) {
           console.error("Upload Error Details:", uploadError);
+          // If lowercase also fails, let's try to provide a more helpful message
+          if (uploadError.message === 'Bucket not found') {
+            throw new Error("Storage bucket 'poetry-images' not found. Please check your Supabase dashboard.");
+          }
           throw uploadError;
         }
         
         console.log("Upload successful, data:", data);
 
         const { data: { publicUrl } } = supabase.storage
-          .from('POETRY-IMAGES')
+          .from('poetry-images')
           .getPublicUrl(filePath);
         
         imageUrl = publicUrl;
@@ -213,7 +217,7 @@ export default function AdminDashboard({ initialPoems }) {
       <aside style={{ width: '280px', backgroundColor: 'white', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100vh' }} suppressHydrationWarning>
         <div style={{ padding: '2rem', borderBottom: '1px solid #edf2f7' }}>
           <h2 className="serif" style={{ color: 'var(--accent)', fontSize: '1.4rem' }}>Workspace</h2>
-          <p style={{ fontSize: '0.75rem', color: '#a0aec0', letterSpacing: '1px' }}>KHAWAB NAGAR KI BASI</p>
+          <p style={{ fontSize: '0.75rem', color: '#a0aec0', letterSpacing: '1px' }}>KHAWAB NAGAR KAY BASI</p>
         </div>
 
         <nav style={{ padding: '2rem 0', flex: 1 }}>
@@ -296,12 +300,17 @@ export default function AdminDashboard({ initialPoems }) {
                       
                       {isCustomDropdownOpen && (
                         <div style={{ position: 'absolute', top: '100%', left: 0, width: '100%', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', marginTop: '2px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', zIndex: 10 }}>
-                          {['ghazals', 'nazms', 'rubai', 'sher'].map((cat) => (
-                            <div key={cat} onClick={() => { setCategory(cat); setIsCustomDropdownOpen(false); }} style={{ padding: '1rem', cursor: 'pointer', borderBottom: '1px solid #f7fafc', backgroundColor: category === cat ? 'rgba(197, 160, 89, 0.05)' : 'transparent', color: category === cat ? 'var(--accent)' : '#4a5568', fontWeight: category === cat ? 'bold' : 'normal' }}>
-                              {cat === 'ghazals' && 'Ghazals'}
-                              {cat === 'nazms' && 'Nazms'}
-                              {cat === 'rubai' && 'Rubaiyat'}
-                              {cat === 'sher' && 'Ashaar'}
+                          {['ghazals', 'nazms', 'rubai', 'sher', 'novels', 'afsany', 'tehreer', 'rohani', 'alfaz'].map((cat) => (
+                            <div key={cat} onClick={() => { setCategory(cat); setIsCustomDropdownOpen(false); }} style={{ padding: '1rem', cursor: 'pointer', borderBottom: '1px solid #f7fafc', backgroundColor: category === cat ? 'rgba(230, 68, 169, 0.05)' : 'transparent', color: category === cat ? 'var(--accent)' : '#4a5568', fontWeight: category === cat ? 'bold' : 'normal' }}>
+                              {cat === 'ghazals' && 'Ghazals (غزلیات)'}
+                              {cat === 'nazms' && 'Nazms (نظمیں)'}
+                              {cat === 'rubai' && 'Rubaiyat (رباعیات)'}
+                              {cat === 'sher' && 'Ashaar (اشعار)'}
+                              {cat === 'novels' && 'Novels (ناول)'}
+                              {cat === 'afsany' && 'Afsany (افسانے)'}
+                              {cat === 'tehreer' && 'Tehreer (تحاریر)'}
+                              {cat === 'rohani' && 'Rohani Shairi (روحانی شاعری)'}
+                              {cat === 'alfaz' && 'Mery Alfaz (میرے الفاظ)'}
                             </div>
                           ))}
                         </div>
@@ -364,7 +373,18 @@ export default function AdminDashboard({ initialPoems }) {
                         <h4 className="urdu" style={{ fontSize: '1.4rem' }}>{poem?.title || 'No Title'}</h4>
                       </td>
                       <td style={{ padding: '1.5rem 2rem' }}>
-                        <span style={{ padding: '0.4rem 0.8rem', backgroundColor: '#fffaf0', color: '#b7791f', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>{poem?.category || 'General'}</span>
+                        <span style={{ padding: '0.4rem 0.8rem', backgroundColor: '#fff5fa', color: '#E644A9', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
+                          {poem?.category === 'ghazals' && 'Ghazals'}
+                          {poem?.category === 'nazms' && 'Nazms'}
+                          {poem?.category === 'rubai' && 'Rubaiyat'}
+                          {poem?.category === 'sher' && 'Ashaar'}
+                          {poem?.category === 'novels' && 'Novels'}
+                          {poem?.category === 'afsany' && 'Afsany'}
+                          {poem?.category === 'tehreer' && 'Tehreer'}
+                          {poem?.category === 'rohani' && 'Rohani'}
+                          {poem?.category === 'alfaz' && 'Mery Alfaz'}
+                          {!['ghazals', 'nazms', 'rubai', 'sher', 'novels', 'afsany', 'tehreer', 'rohani', 'alfaz'].includes(poem?.category) && (poem?.category || 'General')}
+                        </span>
                       </td>
                       <td style={{ padding: '1.5rem 2rem' }}>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -407,7 +427,7 @@ export default function AdminDashboard({ initialPoems }) {
 
 function SidebarItem({ id, icon: Icon, label, activeModule, setActiveModule }) {
   return (
-    <button onClick={() => setActiveModule(id)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', padding: '1rem 1.5rem', background: activeModule === id ? 'rgba(197, 160, 89, 0.1)' : 'transparent', border: 'none', borderLeft: activeModule === id ? '4px solid var(--accent)' : '4px solid transparent', color: activeModule === id ? 'var(--accent)' : '#4a5568', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.95rem', fontWeight: activeModule === id ? '700' : '500' }}>
+    <button onClick={() => setActiveModule(id)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', padding: '1rem 1.5rem', background: activeModule === id ? 'rgba(230, 68, 169, 0.1)' : 'transparent', border: 'none', borderLeft: activeModule === id ? '4px solid var(--accent)' : '4px solid transparent', color: activeModule === id ? 'var(--accent)' : '#4a5568', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.95rem', fontWeight: activeModule === id ? '700' : '500' }}>
       <Icon size={20} />
       {label}
     </button>
