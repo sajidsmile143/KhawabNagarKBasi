@@ -42,7 +42,7 @@ export default async function Home() {
       <div className="container" style={{ padding: '4rem 2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <span style={{ color: 'var(--accent)', letterSpacing: '3px', fontSize: '0.8rem' }}>FEATURED WORKS</span>
-          <h2 className="serif" style={{ fontSize: '2.5rem' }}>Selected Verses</h2>
+          <h2 className="serif" style={{ fontSize: '2.5rem' }}>Selected Masterpieces</h2>
         </div>
         <PoetryGrid poems={displayPoems.slice(0, 6)} />
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
