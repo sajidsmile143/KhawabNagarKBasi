@@ -10,10 +10,10 @@ const Footer = () => {
 
   return (
     <footer style={{ 
-      padding: '6rem 2rem', 
+      padding: '4rem 1rem', 
       textAlign: 'center', 
       borderTop: '1px solid rgba(0,0,0,0.05)',
-      marginTop: '6rem',
+      marginTop: '4rem',
       backgroundColor: 'var(--bg-card)'
     }}>
       <h2 className="serif" style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Khawab Nagar Kay Basi</h2>

@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 const Hero = () => {
   return (
     <section style={{
-      height: '90vh',
+      minHeight: '60vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
+      padding: '4rem 1rem',
       overflow: 'hidden',
       background: 'var(--secondary)',
       backgroundSize: 'cover',
@@ -27,7 +28,9 @@ const Hero = () => {
       <div style={{
         textAlign: 'center',
         zIndex: 2,
-        padding: '0 2rem'
+        padding: '0 1rem',
+        width: '100%',
+        maxWidth: '1000px'
       }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

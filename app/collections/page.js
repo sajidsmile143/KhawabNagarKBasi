@@ -31,7 +31,7 @@ export default async function CollectionsPage() {
         </div>
 
         {poems.length > 0 ? (
-          <PoetryGrid poems={poems} />
+          <PoetryGrid initialPoems={poems} />
         ) : (
           <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
             <p className="urdu" style={{ fontSize: '1.5rem' }}>Abhi koi shayari maujood nahi hai.</p>

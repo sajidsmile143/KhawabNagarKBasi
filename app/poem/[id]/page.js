@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { ArrowLeft, MessageCircle, Heart, Download } from 'lucide-react';
 import Link from 'next/link';
+import PoemActions from '@/components/PoemActions';
 
 async function getPoem(id) {
   try {
@@ -66,14 +67,12 @@ export default async function PoemPage({ params }) {
             {poem.content}
           </p>
           
-          <div style={{ marginTop: '5rem', display: 'flex', justifyContent: 'center', gap: '2rem', borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '3rem' }}>
-            <button className="btn-premium" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '1rem 2.5rem' }}>
-              <Heart size={20} /> Like
-            </button>
-            <button className="btn-premium" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '1rem 2.5rem' }}>
-              <MessageCircle size={20} /> Share
-            </button>
-          </div>
+          <PoemActions 
+            poemId={poem.id} 
+            initialLikes={poem.likes} 
+            title={poem.title} 
+            content={poem.content} 
+          />
         </div>
 
         <div style={{ marginTop: '6rem', textAlign: 'center' }}>

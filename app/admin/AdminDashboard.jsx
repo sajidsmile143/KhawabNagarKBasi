@@ -18,7 +18,8 @@ import {
   Image as ImageIcon,
   Upload,
   X,
-  Edit2
+  Edit2,
+  Menu
 } from 'lucide-react';
 import { createPoem, deletePoem, updatePoem } from '@/lib/actions';
 import { supabase } from '@/lib/supabase';
@@ -39,10 +40,21 @@ export default function AdminDashboard({ initialPoems }) {
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const [editingPoem, setEditingPoem] = useState(null);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const auth = sessionStorage.getItem('admin_auth');
     setIsAuthorized(auth === 'true');
   }, []);
+
+  const isMobile = windowWidth < 1024;
 
   const showNotification = (message, type = 'success') => {
     setNotification({ show: true, message, type });
@@ -83,6 +95,7 @@ export default function AdminDashboard({ initialPoems }) {
     setImagePreview(poem.image);
     setImageFile(null); // Reset file if any
     setActiveModule('write');
+    if (isMobile) setIsSidebarOpen(false);
   };
 
   const handleCancelEdit = () => {
@@ -119,7 +132,6 @@ export default function AdminDashboard({ initialPoems }) {
 
         if (uploadError) {
           console.error("Upload Error Details:", uploadError);
-          // If lowercase also fails, let's try to provide a more helpful message
           if (uploadError.message === 'Bucket not found') {
             throw new Error("Storage bucket 'poetry-images' not found. Please check your Supabase dashboard.");
           }
@@ -190,10 +202,10 @@ export default function AdminDashboard({ initialPoems }) {
 
   if (!isAuthorized) {
     return (
-      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f2f5' }}>
-        <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '16px', boxShadow: '0 20px 60px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-          <h2 className="serif" style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--accent)' }}>Admin Login</h2>
-          <p style={{ color: '#666', marginBottom: '2rem' }}>Enter your secret key to access workspace.</p>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f2f5', padding: '1rem' }}>
+        <div style={{ backgroundColor: 'white', padding: isMobile ? '2rem' : '3rem', borderRadius: '16px', boxShadow: '0 20px 60px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+          <h2 className="serif" style={{ fontSize: isMobile ? '1.5rem' : '2rem', marginBottom: '1rem', color: 'var(--accent)' }}>Admin Login</h2>
+          <p style={{ color: '#666', marginBottom: '2rem', fontSize: '0.9rem' }}>Enter your secret key to access workspace.</p>
           <form onSubmit={handleLogin}>
             <input 
               type="password" 
@@ -211,20 +223,43 @@ export default function AdminDashboard({ initialPoems }) {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f7fafc' }} suppressHydrationWarning>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f7fafc', position: 'relative' }} suppressHydrationWarning>
       {notification.show && <Toast notification={notification} />}
 
-      <aside style={{ width: '280px', backgroundColor: 'white', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100vh' }} suppressHydrationWarning>
-        <div style={{ padding: '2rem', borderBottom: '1px solid #edf2f7' }}>
-          <h2 className="serif" style={{ color: 'var(--accent)', fontSize: '1.4rem' }}>Workspace</h2>
-          <p style={{ fontSize: '0.75rem', color: '#a0aec0', letterSpacing: '1px' }}>KHAWAB NAGAR KAY BASI</p>
+      {/* Sidebar Overlay for mobile */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, backdropFilter: 'blur(4px)' }}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside style={{ 
+        width: isMobile ? '85%' : '280px', 
+        maxWidth: '300px',
+        backgroundColor: 'white', 
+        borderRight: '1px solid #e2e8f0', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        position: 'fixed', 
+        height: '100vh',
+        left: isMobile ? (isSidebarOpen ? 0 : '-100%') : 0,
+        transition: 'left 0.3s ease',
+        zIndex: 101 
+      }} suppressHydrationWarning>
+        <div style={{ padding: '2rem', borderBottom: '1px solid #edf2f7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h2 className="serif" style={{ color: 'var(--accent)', fontSize: '1.4rem' }}>Workspace</h2>
+            <p style={{ fontSize: '0.75rem', color: '#a0aec0', letterSpacing: '1px' }}>POETRY PANEL</p>
+          </div>
+          {isMobile && <button onClick={() => setIsSidebarOpen(false)} style={{ background: 'none', border: 'none', color: '#a0aec0' }}><X size={20} /></button>}
         </div>
 
         <nav style={{ padding: '2rem 0', flex: 1 }}>
-          <SidebarItem id="stats" icon={BarChart3} label="Dashboard" activeModule={activeModule} setActiveModule={setActiveModule} />
-          <SidebarItem id="write" icon={PlusSquare} label="Write New" activeModule={activeModule} setActiveModule={setActiveModule} />
-          <SidebarItem id="manage" icon={Library} label="Manage All" activeModule={activeModule} setActiveModule={setActiveModule} />
-          <SidebarItem id="settings" icon={Settings} label="Settings" activeModule={activeModule} setActiveModule={setActiveModule} />
+          <SidebarItem id="stats" icon={BarChart3} label="Dashboard" activeModule={activeModule} setActiveModule={(id) => { setActiveModule(id); if(isMobile) setIsSidebarOpen(false); }} />
+          <SidebarItem id="write" icon={PlusSquare} label="Write New" activeModule={activeModule} setActiveModule={(id) => { setActiveModule(id); if(isMobile) setIsSidebarOpen(false); }} />
+          <SidebarItem id="manage" icon={Library} label="Manage All" activeModule={activeModule} setActiveModule={(id) => { setActiveModule(id); if(isMobile) setIsSidebarOpen(false); }} />
+          <SidebarItem id="settings" icon={Settings} label="Settings" activeModule={activeModule} setActiveModule={(id) => { setActiveModule(id); if(isMobile) setIsSidebarOpen(false); }} />
         </nav>
 
         <div style={{ padding: '2rem', borderTop: '1px solid #edf2f7' }}>
@@ -237,28 +272,45 @@ export default function AdminDashboard({ initialPoems }) {
         </div>
       </aside>
 
-      <main style={{ marginLeft: '280px', flex: 1, padding: '3rem' }}>
-        <header style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h1 className="serif" style={{ fontSize: '2.5rem', color: '#1a202c' }}>
-              {activeModule === 'write' && (editingPoem ? 'Edit Masterpiece' : 'New Masterpiece')}
-              {activeModule === 'manage' && 'Collections'}
-              {activeModule === 'stats' && 'Insights'}
-              {activeModule === 'settings' && 'Settings'}
-            </h1>
-            <p style={{ color: '#718096' }}>{new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+      <main style={{ 
+        marginLeft: isMobile ? 0 : '280px', 
+        flex: 1, 
+        padding: isMobile ? '1.5rem' : '3rem',
+        width: '100%',
+        minWidth: 0
+      }}>
+        <header style={{ marginBottom: isMobile ? '2rem' : '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {isMobile && (
+              <button 
+                onClick={() => setIsSidebarOpen(true)}
+                style={{ padding: '0.6rem', backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '10px', cursor: 'pointer', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
+              >
+                <Menu size={24} />
+              </button>
+            )}
+            <div>
+              <h1 className="serif" style={{ fontSize: isMobile ? '1.8rem' : '2.5rem', color: '#1a202c' }}>
+                {activeModule === 'write' && (editingPoem ? 'Edit' : 'Write')}
+                {activeModule === 'manage' && 'Gallery'}
+                {activeModule === 'stats' && 'Insights'}
+                {activeModule === 'settings' && 'Settings'}
+              </h1>
+              <p style={{ color: '#718096', fontSize: '0.8rem' }}>{new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}</p>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          
+          <div style={{ display: isMobile ? 'none' : 'flex', gap: '1rem' }}>
              <div style={{ padding: '0.8rem 1.5rem', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <PenTool size={16} color="var(--accent)" />
-                <span style={{ fontWeight: 'bold' }}>{poems.length}</span> <span style={{ color: '#718096', fontSize: '0.9rem' }}>Published</span>
+                <span style={{ fontWeight: 'bold' }}>{poems.length}</span> <span style={{ color: '#718096', fontSize: '0.9rem' }}>Works</span>
              </div>
           </div>
         </header>
 
         <div style={{ maxWidth: '1000px' }}>
           {activeModule === 'write' && (
-            <div className="fade-in" style={{ backgroundColor: 'white', borderRadius: '16px', padding: '3rem', boxShadow: '0 4px 6px rgba(0,0,0,0.02)', border: '1px solid #edf2f7' }}>
+            <div className="fade-in" style={{ backgroundColor: 'white', borderRadius: '16px', padding: isMobile ? '1.5rem' : '3rem', boxShadow: '0 4px 6px rgba(0,0,0,0.02)', border: '1px solid #edf2f7' }}>
               <form onSubmit={handlePublish}>
                 {/* Image Upload Area */}
                 <div style={{ marginBottom: '2.5rem' }}>
@@ -287,7 +339,7 @@ export default function AdminDashboard({ initialPoems }) {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', gap: '2rem', marginBottom: '2.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '2rem', marginBottom: '2.5rem' }}>
                    <div style={{ flex: 1, position: 'relative' }}>
                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#a0aec0', marginBottom: '0.5rem' }}>CATEGORY</label>
                      <div 
@@ -316,23 +368,23 @@ export default function AdminDashboard({ initialPoems }) {
                         </div>
                       )}
                    </div>
-                   <div style={{ flex: 2 }}>
+                   <div style={{ flex: isMobile ? 1 : 2 }}>
                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#a0aec0', marginBottom: '0.5rem' }}>UNWAN (TITLE)</label>
-                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Yahan unwan likhen..." className="urdu" style={{ width: '100%', padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', fontSize: '1.8rem', textAlign: 'right' }} />
+                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Yahan unwan likhen..." className="urdu" style={{ width: '100%', padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', fontSize: isMobile ? '1.4rem' : '1.8rem', textAlign: 'right' }} />
                    </div>
                 </div>
 
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#a0aec0', marginBottom: '0.5rem' }}>CONTENT (SHAYARI)</label>
-                <textarea placeholder="Apni shayari yahan likhen..." className="urdu" value={content} onChange={(e) => setContent(e.target.value)} style={{ width: '100%', height: '400px', padding: '2rem', fontSize: '1.5rem', border: '1px solid #e2e8f0', borderRadius: '12px', outline: 'none', resize: 'none', textAlign: 'right', lineHeight: '2.5', marginBottom: '2.5rem' }} />
+                <textarea placeholder="Apni shayari yahan likhen..." className="urdu" value={content} onChange={(e) => setContent(e.target.value)} style={{ width: '100%', height: isMobile ? '300px' : '400px', padding: isMobile ? '1rem' : '2rem', fontSize: isMobile ? '1.2rem' : '1.5rem', border: '1px solid #e2e8f0', borderRadius: '12px', outline: 'none', resize: 'none', textAlign: 'right', lineHeight: '2.5', marginBottom: '2.5rem' }} />
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexDirection: isMobile ? 'column' : 'row' }}>
                   {editingPoem && (
                     <button type="button" onClick={handleCancelEdit} className="btn-secondary" style={{ padding: '1rem 2rem', borderRadius: '8px', border: '1px solid #e2e8f0', cursor: 'pointer', backgroundColor: 'transparent' }}>
                       Cancel
                     </button>
                   )}
-                  <button type="submit" disabled={isPublishing} className="btn-premium" style={{ padding: '1rem 3rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <Send size={18} /> {isPublishing ? (editingPoem ? 'Updating...' : 'Publishing...') : (editingPoem ? 'Update Masterpiece' : 'Publish Masterpiece')}
+                  <button type="submit" disabled={isPublishing} className="btn-premium" style={{ padding: '1rem 3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem' }}>
+                    <Send size={18} /> {isPublishing ? 'Please wait...' : (editingPoem ? 'Update' : 'Publish')}
                   </button>
                 </div>
               </form>
@@ -341,81 +393,74 @@ export default function AdminDashboard({ initialPoems }) {
 
           {activeModule === 'manage' && (
             <div className="fade-in" style={{ backgroundColor: 'white', borderRadius: '16px', border: '1px solid #edf2f7', overflow: 'hidden' }}>
-              <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid #edf2f7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                 <div style={{ position: 'relative' }}>
+              <div style={{ padding: isMobile ? '1rem' : '1.5rem 2rem', borderBottom: '1px solid #edf2f7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                 <div style={{ position: 'relative', width: '100%' }}>
                     <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#a0aec0' }} />
-                    <input type="text" placeholder="Search poems..." style={{ padding: '0.6rem 1rem 0.6rem 3rem', borderRadius: '20px', border: '1px solid #e2e8f0', outline: 'none', width: '300px' }} />
+                    <input type="text" placeholder="Search..." style={{ padding: '0.6rem 1rem 0.6rem 3rem', borderRadius: '20px', border: '1px solid #e2e8f0', outline: 'none', width: '100%', maxWidth: '300px' }} />
                  </div>
               </div>
               
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#f7fafc', textAlign: 'left' }}>
-                    <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Image</th>
-                    <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Title</th>
-                    <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Category</th>
-                    <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {poems.map((poem, index) => (
-                    <tr key={poem?.id || index} style={{ borderBottom: '1px solid #edf2f7' }}>
-                      <td style={{ padding: '1rem 2rem' }}>
-                        {poem?.image ? (
-                          <img src={poem.image} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
-                        ) : (
-                          <div style={{ width: '60px', height: '40px', backgroundColor: '#f7fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px' }}>
-                            <ImageIcon size={16} color="#cbd5e0" />
-                          </div>
-                        )}
-                      </td>
-                      <td style={{ padding: '1.5rem 2rem' }}>
-                        <h4 className="urdu" style={{ fontSize: '1.4rem' }}>{poem?.title || 'No Title'}</h4>
-                      </td>
-                      <td style={{ padding: '1.5rem 2rem' }}>
-                        <span style={{ padding: '0.4rem 0.8rem', backgroundColor: '#fff5fa', color: '#E644A9', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                          {poem?.category === 'ghazals' && 'Ghazals'}
-                          {poem?.category === 'nazms' && 'Nazms'}
-                          {poem?.category === 'rubai' && 'Rubaiyat'}
-                          {poem?.category === 'sher' && 'Ashaar'}
-                          {poem?.category === 'novels' && 'Novels'}
-                          {poem?.category === 'afsany' && 'Afsany'}
-                          {poem?.category === 'tehreer' && 'Tehreer'}
-                          {poem?.category === 'rohani' && 'Rohani'}
-                          {poem?.category === 'alfaz' && 'Mery Alfaz'}
-                          {!['ghazals', 'nazms', 'rubai', 'sher', 'novels', 'afsany', 'tehreer', 'rohani', 'alfaz'].includes(poem?.category) && (poem?.category || 'General')}
-                        </span>
-                      </td>
-                      <td style={{ padding: '1.5rem 2rem' }}>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button onClick={() => handleEdit(poem)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', padding: '0.5rem' }}>
-                            <Edit2 size={20} />
-                          </button>
-                          <button onClick={() => poem?.id && handleDelete(poem.id)} style={{ background: 'none', border: 'none', color: '#f56565', cursor: 'pointer', padding: '0.5rem' }}>
-                            <Trash2 size={20} />
-                          </button>
-                        </div>
-                      </td>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f7fafc', textAlign: 'left' }}>
+                      <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Image</th>
+                      <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Title</th>
+                      <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Category</th>
+                      <th style={{ padding: '1.2rem 2rem', color: '#718096', fontSize: '0.8rem', textTransform: 'uppercase' }}>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {poems.map((poem, index) => (
+                      <tr key={poem?.id || index} style={{ borderBottom: '1px solid #edf2f7' }}>
+                        <td style={{ padding: '1rem 2rem' }}>
+                          {poem?.image ? (
+                            <img src={poem.image} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                          ) : (
+                            <div style={{ width: '60px', height: '40px', backgroundColor: '#f7fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px' }}>
+                              <ImageIcon size={16} color="#cbd5e0" />
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '1.5rem 2rem' }}>
+                          <h4 className="urdu" style={{ fontSize: '1.2rem' }}>{poem?.title || 'No Title'}</h4>
+                        </td>
+                        <td style={{ padding: '1.5rem 2rem' }}>
+                          <span style={{ padding: '0.4rem 0.8rem', backgroundColor: '#fff5fa', color: '#E644A9', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
+                            {poem?.category || 'General'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1.5rem 2rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button onClick={() => handleEdit(poem)} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', padding: '0.5rem' }}>
+                              <Edit2 size={20} />
+                            </button>
+                            <button onClick={() => poem?.id && handleDelete(poem.id)} style={{ background: 'none', border: 'none', color: '#f56565', cursor: 'pointer', padding: '0.5rem' }}>
+                              <Trash2 size={20} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
           {activeModule === 'stats' && (
-            <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+            <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '1.5rem' }}>
               <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '16px', border: '1px solid #edf2f7' }}>
                 <p style={{ color: '#a0aec0', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Works</p>
-                <h2 style={{ fontSize: '3rem' }}>{poems.length}</h2>
+                <h2 style={{ fontSize: isMobile ? '2rem' : '3rem' }}>{poems.length}</h2>
               </div>
               <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '16px', border: '1px solid #edf2f7' }}>
                 <p style={{ color: '#a0aec0', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Categories</p>
-                <h2 style={{ fontSize: '3rem' }}>4</h2>
+                <h2 style={{ fontSize: isMobile ? '2rem' : '3rem' }}>9</h2>
               </div>
               <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '16px', border: '1px solid #edf2f7' }}>
                 <p style={{ color: '#a0aec0', fontSize: '0.9rem', marginBottom: '1rem' }}>Global Reach</p>
-                <h2 style={{ fontSize: '3rem' }}>∞</h2>
+                <h2 style={{ fontSize: isMobile ? '2rem' : '3rem' }}>∞</h2>
               </div>
             </div>
           )}

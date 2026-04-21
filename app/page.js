@@ -44,7 +44,7 @@ export default async function Home() {
           <span style={{ color: 'var(--accent)', letterSpacing: '3px', fontSize: '0.8rem' }}>FEATURED WORKS</span>
           <h2 className="serif" style={{ fontSize: '2.5rem' }}>Selected Masterpieces</h2>
         </div>
-        <PoetryGrid poems={displayPoems.slice(0, 6)} />
+        <PoetryGrid initialPoems={displayPoems} />
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
           <Link href="/collections">
             <button className="btn-premium">View All Collections</button>
